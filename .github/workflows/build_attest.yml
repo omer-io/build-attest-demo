@@ -1,0 +1,56 @@
+name: build-attest-demo
+
+on:
+  push:
+    tags:
+      - "v*"
+
+env:
+  CARGO_TERM_COLOR: always
+
+permissions:
+  id-token: write
+  contents: write
+  attestations: write
+  
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true 
+
+    - name: checkout private repo
+      uses: actions/checkout@v4
+      with:
+        repository: omer-io/smol-vs-tokio
+        token: ${{ secrets.GITHUB_TOKEN }}
+        path: smol-vs-tokio
+        submodules: true
+
+    - name: Build
+      run: cargo build --release -p smol-vs-tokio
+
+    - name: Run tests
+      run: cargo test --release
+
+    - name: Generate artifact attestation
+      uses: actions/attest-build-provenance@v3
+      with:
+        subject-path: 'target/release/smol-vs-tokio'
+
+    - name: Upload binary
+      uses: actions/upload-artifact@v4
+      with:
+        name: hello-world
+        path: target/release/smol-vs-tokio
+
+    - name: Upload to GitHub Release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: target/release/smol-vs-tokio
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
