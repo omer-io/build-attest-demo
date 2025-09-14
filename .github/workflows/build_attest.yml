@@ -32,7 +32,9 @@ jobs:
         submodules: true
 
     - name: Build
-      run: cargo build --release -p smol-vs-tokio
+      run: |
+        cd smol-vs-tokio
+        cargo build --release
 
     - name: Run tests
       run: cargo test --release
@@ -40,17 +42,17 @@ jobs:
     - name: Generate artifact attestation
       uses: actions/attest-build-provenance@v3
       with:
-        subject-path: 'target/release/smol-vs-tokio'
+        subject-path: 'smol-vs-tokio/target/release/smol-vs-tokio'
 
     - name: Upload binary
       uses: actions/upload-artifact@v4
       with:
         name: hello-world
-        path: target/release/smol-vs-tokio
+        path: smol-vs-tokio/target/release/smol-vs-tokio
 
     - name: Upload to GitHub Release
       uses: softprops/action-gh-release@v2
       with:
-        files: target/release/smol-vs-tokio
+        files: smol-vs-tokio/target/release/smol-vs-tokio
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
