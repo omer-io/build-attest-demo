@@ -27,6 +27,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         repository: omer-io/smol-vs-tokio
+        token: ${{ secrets.PRIVATE_REPO_TOKEN }}
         path: smol-vs-tokio
         submodules: true
 
