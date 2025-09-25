@@ -23,17 +23,16 @@ jobs:
       with:
         submodules: true 
 
-    - name: checkout private repo
-      uses: actions/checkout@v4
-      with:
-        repository: omer-io/smol-vs-tokio
-        token: ${{ secrets.PRIVATE_REPO_TOKEN }}
-        path: smol-vs-tokio
-        submodules: true
+    # - name: checkout private repo
+    #   uses: actions/checkout@v4
+    #   with:
+    #     repository: omer-io/smol-vs-tokio
+    #     token: ${{ secrets.PRIVATE_REPO_TOKEN }}
+    #     path: src/smol-vs-tokio
+    #     submodules: true
 
     - name: Build
       run: |
-        cd smol-vs-tokio
         cargo build --release
 
     - name: Run tests
@@ -42,17 +41,17 @@ jobs:
     - name: Generate artifact attestation
       uses: actions/attest-build-provenance@v3
       with:
-        subject-path: 'smol-vs-tokio/target/release/smol-vs-tokio'
+        subject-path: 'target/release/build-attest-demo'
 
     - name: Upload binary
       uses: actions/upload-artifact@v4
       with:
-        name: smol-vs-tokio
-        path: smol-vs-tokio/target/release/smol-vs-tokio
+        name: build-attest-demo
+        path: target/release/build-attest-demo
 
     - name: Upload to GitHub Release
       uses: softprops/action-gh-release@v2
       with:
-        files: smol-vs-tokio/target/release/smol-vs-tokio
+        files: target/release/build-attest-demo
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
