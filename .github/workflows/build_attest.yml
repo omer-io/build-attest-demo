@@ -15,8 +15,11 @@ permissions:
   
 jobs:
   build:
+    strategy:
+      matrix:
+        os: [ubuntu-22.04, ubuntu-24.04]
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
 
     steps:
     - uses: actions/checkout@v4
@@ -70,6 +73,6 @@ jobs:
 
         scp -o StrictHostKeyChecking=no -i gcp_key.pem \
           smol-vs-tokio/target/release/smol-vs-tokio \
-          ${GCP_VM_USER}@${GCP_VM_IP}:${BACKEND_PATH}/
+          ${GCP_VM_USER}@${GCP_VM_IP}:${BACKEND_PATH}/${{ vars.RELEASE_TAG }}_${{ matrix.os }}.so
 
         shred -u gcp_key.pem
