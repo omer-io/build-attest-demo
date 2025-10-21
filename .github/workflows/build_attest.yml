@@ -69,10 +69,12 @@ jobs:
       run: |
         BRANCH_NAME=$(git branch -r --contains ${{ github.sha }} | grep -v HEAD | head -n 1 | sed 's/.*\///')
         echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
+        echo "branch_name=$BRANCH_NAME"
   
     - name: Create tar of scheduler library
       run: |
         TAR_NAME="${{ steps.branch_name.outputs.branch_name }}_${{ matrix.os }}.tar.gz"
+        echo "TAR_NAME=$TAR_NAME"
         tar -cvzf $TAR_NAME smol-vs-tokio/target/release/smol-vs-tokio
       
     - name: Securely copy binary to GCP machine
