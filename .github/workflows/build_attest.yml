@@ -64,6 +64,17 @@ jobs:
     #   env:
     #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+    - name: Get branch name for tagged commit
+      id: branch_name
+      run: |
+        BRANCH_NAME=$(git branch -r --contains ${{ github.sha }} | grep -v HEAD | head -n 1 | sed 's/.*\///')
+        echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
+  
+    - name: Create tar of scheduler library
+      run: |
+        TAR_NAME="${{ steps.branch_name.outputs.branch_name }}_${{ matrix.os }}.tar.gz"
+        tar -cvzf $TAR_NAME smol-vs-tokio/target/release/smol-vs-tokio
+      
     - name: Securely copy binary to GCP machine
       env:
         GCP_SSH_KEY: ${{ secrets.GCP_SSH_KEY }}
@@ -74,8 +85,9 @@ jobs:
         echo "$GCP_SSH_KEY" > gcp_key.pem
         chmod 600 gcp_key.pem
 
+        TAR_NAME="${{ steps.branch_name.outputs.branch_name }}_${{ matrix.os }}.tar.gz"
         scp -o StrictHostKeyChecking=no -i gcp_key.pem \
-          smol-vs-tokio/target/release/smol-vs-tokio \
-          ${GCP_VM_USER}@${GCP_VM_IP}:${BACKEND_PATH}/${{ vars.RELEASE_TAG }}_${{ matrix.os }}.so
+          $TAR_NAME \
+          ${GCP_VM_USER}@${GCP_VM_IP}:${BACKEND_PATH}/
 
         shred -u gcp_key.pem
