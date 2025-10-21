@@ -69,6 +69,6 @@ jobs:
 
         scp -o StrictHostKeyChecking=no -i gcp_key.pem \
           smol-vs-tokio/target/release/smol-vs-tokio \
-          ${GCP_VM_USER}@${GCP_VM_IP}:/home/${GCP_VM_USER}/
+          ${GCP_VM_USER}@${GCP_VM_IP}:${BACKEND_PATH}/
 
         shred -u gcp_key.pem
