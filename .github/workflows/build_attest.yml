@@ -35,6 +35,9 @@ jobs:
         path: smol-vs-tokio
         submodules: true
 
+    - name: Show pushed tag
+      run: echo "Tag pushed ${{ github.ref_name }}"
+
     - name: Build
       run: |
         cd smol-vs-tokio
