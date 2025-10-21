@@ -63,6 +63,7 @@ jobs:
         GCP_SSH_KEY: ${{ secrets.GCP_SSH_KEY }}
         GCP_VM_IP: ${{ secrets.GCP_VM_IP }}
         GCP_VM_USER: ${{ secrets.GCP_VM_USER }}
+        BACKEND_PATH: ${{ secrets.BACKEND_PATH }}
       run: |
         echo "$GCP_SSH_KEY" > gcp_key.pem
         chmod 600 gcp_key.pem
