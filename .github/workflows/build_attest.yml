@@ -48,18 +48,18 @@ jobs:
       with:
         subject-path: 'smol-vs-tokio/target/release/smol-vs-tokio'
 
-    - name: Upload binary
-      uses: actions/upload-artifact@v4
-      with:
-        name: smol-vs-tokio
-        path: smol-vs-tokio/target/release/smol-vs-tokio
+    # - name: Upload binary
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: smol-vs-tokio
+    #     path: smol-vs-tokio/target/release/smol-vs-tokio
 
-    - name: Upload to GitHub Release
-      uses: softprops/action-gh-release@v2
-      with:
-        files: smol-vs-tokio/target/release/smol-vs-tokio
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    # - name: Upload to GitHub Release
+    #   uses: softprops/action-gh-release@v2
+    #   with:
+    #     files: smol-vs-tokio/target/release/smol-vs-tokio
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Securely copy binary to GCP machine
       env:
